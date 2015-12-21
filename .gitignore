@@ -1,0 +1,8 @@
+*.lps
+bin/i386-go32v2/*
+!bin/i386-go32v2/Mastermind.exe
+bin/i386-linux/*
+!bin/i386-linux/Mastermind
+bin/i386-win32/*
+!bin/i386-win32/Mastermind.exe
+obj/
