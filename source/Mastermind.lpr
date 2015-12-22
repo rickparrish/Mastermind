@@ -11,6 +11,7 @@ begin
   { add your program here }
   try
     try
+      Randomize;
       DoorStartUp;
       DoorSession.SethWrite := true;
       DoorClrScr;
