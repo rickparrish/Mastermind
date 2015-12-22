@@ -31,71 +31,37 @@ procedure SwitchColourRight; forward;
 procedure DrawBoard;
 begin
   DoorSession.SethWrite := false;
-
   DoorClrScr;
-  // http://patorjk.com/software/taag/#p=display&f=Soft&t=Mastermind
-  DoorWriteLn('  ,--.   ,--.                ,--.                          ,--.           ,--. ');
-  DoorWriteLn('  |   `.''   | ,--,--. ,---.,-''  ''-. ,---. ,--.--.,--,--,--.`--'',--,--,  ,-|  | ');
-  DoorWriteLn('  |  |''.''|  |'' ,-.  |(  .-''''-.  .-''| .-. :|  .--''|        |,--.|      \'' .-. | ');
-  DoorWriteLn('  |  |   |  |\ ''-''  |.-''  `) |  |  \   --.|  |   |  |  |  ||  ||  ||  |\ `-'' | ');
-  DoorWriteLn('  `--''   `--'' `--`--''`----''  `--''   `----''`--''   `--`--`--''`--''`--''''--'' `---''  ');
-  DoorWriteLn('  +-----+----++----+----++----+----++----+----++----+----++----+----++------+ ');
-  DoorWriteLn('  |   x |  x ||  x |  x ||  x |  x ||  x |  x ||  x |  x ||  x |  x ||      |x');
-  DoorWriteLn('  |     |    ||    |    ||    |    ||    |    ||    |    ||    |    ||      |x');
-  DoorWriteLn('  |  01 | 02 || 03 | 04 || 05 | 06 || 07 | 08 || 09 | 10 || 11 | 12 ||  aa  |x');
-  DoorWriteLn('  |  01 | 02 || 03 | 04 || 05 | 06 || 07 | 08 || 09 | 10 || 11 | 12 ||  aa  |x');
-  DoorWriteLn('  |     |    ||    |    ||    |    ||    |    ||    |    ||    |    ||      |x');
-  DoorWriteLn('  |  01 | 02 || 03 | 04 || 05 | 06 || 07 | 08 || 09 | 10 || 11 | 12 ||  aa  |x');
-  DoorWriteLn('  |  01 | 02 || 03 | 04 || 05 | 06 || 07 | 08 || 09 | 10 || 11 | 12 ||  aa  |x');
-  DoorWriteLn('  |     |    ||    |    ||    |    ||    |    ||    |    ||    |    ||      |x');
-  DoorWriteLn('  |  01 | 02 || 03 | 04 || 05 | 06 || 07 | 08 || 09 | 10 || 11 | 12 ||  aa  |x');
-  DoorWriteLn('  |  01 | 02 || 03 | 04 || 05 | 06 || 07 | 08 || 09 | 10 || 11 | 12 ||  aa  |x');
-  DoorWriteLn('  |     |    ||    |    ||    |    ||    |    ||    |    ||    |    ||      |x');
-  DoorWriteLn('  |  01 | 02 || 03 | 04 || 05 | 06 || 07 | 08 || 09 | 10 || 11 | 12 ||  aa  |x');
-  DoorWriteLn('  |  01 | 02 || 03 | 04 || 05 | 06 || 07 | 08 || 09 | 10 || 11 | 12 ||  aa  |x');
-  DoorWriteLn('  |     |    ||    |    ||    |    ||    |    ||    |    ||    |    ||      |x');
-  DoorWriteLn('  |   x |  x ||  x |  x ||  x |  x ||  x |  x ||  x |  x ||  x |  x ||      |x');
-  DoorWriteLn('  +-----+----++----+----++----+----++----+----++----+----++----+----++------+x');
-  DoorWriteLn('   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
+  {$I board.inc}
   DoorSession.SethWrite := true;
 end;
 
 procedure DrawPosition(draw: Boolean);
+const
+  LEFTBORDER: Array[0..1] of Char = (#218, #192);
+  RIGHTBORDER: Array[0..1] of Char = (#191, #217);
+  MIDDLE: Array[0..1] of Char = (#220, #223);
 var
-  NewX, NewY: Integer;
+  I, NewX, NewY: Integer;
 begin
-  NewX := 5 + (Position.x - 1) * 5;
-  if (Position.X > 2) then NewX += Round(Position.x / 2 + 0.1) - 1; // + 0.1 is because Pascal rounds to even
-  NewY := 9 + (Position.y - 1) * 3;
+  NewX := 7 + (Position.x - 1) * 5;
+  NewY := 8 + (Position.y - 1) * 3;
 
-  DoorGotoXY(NewX, NewY);
-  if (draw) then
+  for I := 0 to 1 do
   begin
-    DoorWrite('[');
-    DoorTextColour(COLOURS[Colour]);
-    DoorWrite(#220#220);
-    DoorTextColour(Crt.LightGray);
-    DoorWrite(']');
-  end else
-  begin
-    DoorWrite(' ');
-    DoorCursorRight(2);
-    DoorWrite(' ');
-  end;
-
-  DoorGotoXY(NewX, NewY + 1);
-  if (draw) then
-  begin
-    DoorWrite('[');
-    DoorTextColour(COLOURS[Colour]);
-    DoorWrite(#223#223);
-    DoorTextColour(Crt.LightGray);
-    DoorWrite(']');
-  end else
-  begin
-    DoorWrite(' ');
-    DoorCursorRight(2);
-    DoorWrite(' ');
+    DoorGotoXY(NewX, NewY + I);
+    if (draw) then
+    begin
+      DoorWrite('`r6`%' + LEFTBORDER[I]);
+      DoorTextColour(COLOURS[Colour]);
+      DoorWrite(MIDDLE[I] + MIDDLE[I]);
+      DoorWrite('`%' + RIGHTBORDER[I]);
+    end else
+    begin
+      DoorWrite('`r6 ');
+      DoorCursorRight(2);
+      DoorWrite(' `r0');
+    end;
   end;
 end;
 
@@ -154,6 +120,15 @@ begin
     end else
     begin
       case Ch of
+        #13:
+          begin
+            // TODOX
+            DrawPosition(false);
+            Position.X += 1;
+            if (Position.X > 12) then Position.X := 1;
+            Position.Y := 1;
+            DrawPosition(true);
+          end;
         '8': MoveUp;
         '4': SwitchColourLeft;
         '6': SwitchColourRight;
@@ -161,7 +136,7 @@ begin
         'Q': begin
                // Confirm exit
                DoorGotoXY(1, 24);
-               DoorWrite('`r0`2  Are you sure you want to quit back to the BBS? [`%Y`2] : ');
+               DoorWrite('`r0`2      Are you sure you want to quit back to the BBS? [`%Y`2] : ');
 
                repeat
                  // Repeat until we have a valid selection
