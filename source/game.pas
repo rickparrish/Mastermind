@@ -251,6 +251,7 @@ begin
                   ResetGame;
                 end else
                 begin
+                  // Move previous guess to new row
                   // TODOY Multiple DrawPosition is sucky
                   for I := High(CurrentRow) downto Low(CurrentRow) do
                   begin
@@ -344,11 +345,6 @@ begin
     AnswerRow[I] := Random(6) + 1;
     CurrentRow[I] := 0;
   end;
-  //TODOX (Crt.LightBlue, Crt.LightRed, Crt.LightGreen, Crt.LightMagenta, Crt.Yellow, Crt.White);
-  AnswerRow[1] := 3;
-  AnswerRow[2] := 5;
-  AnswerRow[3] := 4;
-  AnswerRow[4] := 5;
 
   DrawBoard;
   DrawAnswer; // TODOZ
